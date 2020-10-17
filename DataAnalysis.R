@@ -26,7 +26,7 @@ sum(NA_S)
 
 games$Publisher %>% 
     ggplot(aes(x = NA_S , y = Publisher))
-   filter(Publisher == "Nintendo")
+   
    + 
    geom_histogram() 
   labs(title = "Games Sales")
@@ -36,3 +36,6 @@ plot(games$Publisher,NA_S)
 ggplot(games, aes(NA_S, Publisher)) 
 filter(Publisher == "Nintendo")+
   geom_point()
+
+
+
