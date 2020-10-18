@@ -30,12 +30,14 @@ games$Publisher %>%
    + 
    geom_histogram() 
   labs(title = "Games Sales")
-```
+
 plot(games$Publisher,NA_S)
 
 ggplot(games, aes(NA_S, Publisher)) 
 filter(Publisher == "Nintendo")+
-  geom_point()
-
+   
+# taking sample from data
+   Sample_P <- games[games$Publisher == "Nintendo", "Microsoft Game Studios", "Sony Computer Entertainment"]
+   
 
 
