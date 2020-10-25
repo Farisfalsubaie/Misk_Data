@@ -56,5 +56,15 @@ vgsales_genre <- games %>%
 
 ggplot(vgsales_genre) +
    geom_col()
+# sales over time 
+ggplot(games) +
+   geom_line(aes(x = Year, y = Global_Sales, group = vgsales_region_sum), color = 'red')
 
+ggplot(games, aes(Year, Global_Sales)) +
+   geom_line(colour = "#33a02c") +
+   theme_classic()
+
+ggplot(games, aes(Year, Global_Sales)) +
+   geom_line(position = 'jitter', colour = "#33a02c") +
+   theme_classic()
 
