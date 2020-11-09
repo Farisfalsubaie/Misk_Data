@@ -1,0 +1,43 @@
+---
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+Exercises
+Identify four real-life applications of supervised and unsupervised problems.
+Explain what makes these problems supervised versus unsupervised.
+For each problem identify the target variable (if applicable) and potential features.
+Identify and contrast a regression problem with a classification problem.
+What is the target variable in each problem and why would being able to accurately predict this target be beneficial to society?
+What are potential features and where could you collect this information?
+What is determining if the problem is a regression or a classification problem?
+Identify three open source datasets suitable for machine learning (e.g., https://bit.ly/35wKu5c).
+Explain the type of machine learning models that could be constructed from the data (e.g., supervised versus unsupervised and regression versus classification).
+What are the dimensions of the data?
+Is there a code book that explains who collected the data, why it was originally collected, and what each variable represents?
+If the dataset is suitable for supervised learning, which variable(s) could be considered as a useful target? Which variable(s) could be considered as features?
+Identify examples of misuse of machine learning in society. What was the ethical concern?
+
+```{r }
+#https://datahub.io/core/natural-gas#resource-natural-gas_zip
+gas_prices <- read.csv("data/monthly_csv.csv")
+gas_pricesD <- read.csv("data/daily_csv.csv")
+
+```
+```{r}
+summary(gas_prices)
+summary(gas_pricesD)
+```
+
+
+```{r}
+dim(gas_pricesD)
+mean(gas_prices$Price)
+ggplot(gas_pricesD, aes(x=Price))+
+geom_histogram()
+```

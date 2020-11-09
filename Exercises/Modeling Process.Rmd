@@ -1,0 +1,132 @@
+---
+title: "Untitled"
+author: "Faris Alsubaie"
+date: "11/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(rsample)
+library(caret)
+library(tidyverse)
+library(modeldata)
+library(kernlab)
+
+
+```
+
+
+
+```{r , echo=FALSE}
+set.seed(123)
+Boston  <- pdp::boston
+split <- initial_split(Boston, strata = "cmedv", prop = 0.7)
+train <- training(split)
+test  <- testing(split)
+
+ggplot(train, aes(x = cmedv)) +
+ geom_line(stat = "Density",
+           trim = TRUE) +
+ geom_line(data = test,
+           stat = "Density",
+           trim = TRUE, col = "red")
+
+```
+
+
+```{r}
+?strata
+```
+
+
+
+```{r}
+
+data("spam")
+spam
+
+```
+
+```{r}
+
+# 1. stratified sampling with the rsample package
+set.seed(123)
+split  <- initial_split(Boston, prop = 0.7, strata = "cmedv")
+Boston_train  <- training(split)
+Boston_test   <- testing(split)
+
+# 2. create a resampling method
+cv <- trainControl(
+ method = "repeatedcv",
+ number = 10,
+ repeats = 5
+)
+
+# 3. create a hyperparameter grid search
+hyper_grid <- expand.grid(k = seq(2, 26, by = 2))
+
+# 4. execute grid search with knn model
+#    use RMSE as preferred metric
+knn_fit <- train(
+ cmedv ~ .,
+ data = Boston_train,
+ method = "knn",
+ trControl = cv,
+ tuneGrid = hyper_grid,
+ metric = "RMSE"
+)
+
+# 5. evaluate results
+# print model results
+knn_fit
+
+# plot cross validation results
+ggplot(knn_fit$results, aes(k, RMSE)) +
+ geom_line() +
+ geom_point() +
+ scale_y_continuous(labels = scales::dollar)
+
+
+```
+
+# 1. stratified sampling with the rsample package
+set.seed(123)
+split  <- initial_split(Boston, prop = 0.7, strata = "cmedv")
+Boston_train  <- training(split)
+Boston_test   <- testing(split)
+
+# 2. create a resampling method
+cv <- trainControl(
+ method = "repeatedcv",
+ number = 10,
+ repeats = 5
+)
+
+# 3. create a hyperparameter grid search
+hyper_grid <- expand.grid(k = seq(2, 26, by = 2))
+
+# 4. execute grid search with knn model
+#    use RMSE as preferred metric
+knn_fit <- train(
+ cmedv ~ .,
+ data = Boston_train,
+ method = "knn",
+ trControl = cv,
+ tuneGrid = hyper_grid,
+ metric = "RMSE"
+)
+
+# 5. evaluate results
+# print model results
+knn_fit
+
+# plot cross validation results
+ggplot(knn_fit$results, aes(k, RMSE)) +
+ geom_line() +
+ geom_point() +
+ scale_y_continuous(labels = scales::dollar)
+
