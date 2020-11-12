@@ -50,7 +50,22 @@ data("spam")
 spam
 
 ```
+Using the Boston housing training data created in 
+2), fit a linear regression model that use all available features to predict cmedv.
 
+Create a model with lm(), glm(), and caret::train().
+How do the coefficients compare across these models?
+How does the MSE/RMSE compare across these models?
+Which method is caret::train() using to fit a linear regression model?
+```{r}
+
+```
+Using the Boston housing training data created in exercise 2), perform a 10-fold cross-validated linear regression model, repeated 5 times, that uses all available features to predict cmedv.
+
+What is the average RMSE across all 50 model iterations?
+Plot the distribution of the RMSE across all 50 model iterations.
+Describe the results.
+Repeat this exercise for the spam data from exercise 3); since the target (type) is binary, be sure to use a more appropriate metric (e.g., AUC or misclassification error).
 ```{r}
 
 # 1. stratified sampling with the rsample package
@@ -92,41 +107,4 @@ ggplot(knn_fit$results, aes(k, RMSE)) +
 
 
 ```
-
-# 1. stratified sampling with the rsample package
-set.seed(123)
-split  <- initial_split(Boston, prop = 0.7, strata = "cmedv")
-Boston_train  <- training(split)
-Boston_test   <- testing(split)
-
-# 2. create a resampling method
-cv <- trainControl(
- method = "repeatedcv",
- number = 10,
- repeats = 5
-)
-
-# 3. create a hyperparameter grid search
-hyper_grid <- expand.grid(k = seq(2, 26, by = 2))
-
-# 4. execute grid search with knn model
-#    use RMSE as preferred metric
-knn_fit <- train(
- cmedv ~ .,
- data = Boston_train,
- method = "knn",
- trControl = cv,
- tuneGrid = hyper_grid,
- metric = "RMSE"
-)
-
-# 5. evaluate results
-# print model results
-knn_fit
-
-# plot cross validation results
-ggplot(knn_fit$results, aes(k, RMSE)) +
- geom_line() +
- geom_point() +
- scale_y_continuous(labels = scales::dollar)
 

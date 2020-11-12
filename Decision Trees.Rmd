@@ -1,0 +1,118 @@
+---
+title: "Decision Trees"
+author: "Faris Alsubaie"
+date: "11/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Helper packages
+library(dplyr)       # for data wrangling
+library(ggplot2)     # for awesome plotting
+
+# Modeling packages
+library(rpart)       # direct engine for decision tree application
+library(caret)       # meta engine for decision tree application
+
+# Model interpretability packages
+library(rpart.plot)  # for plotting decision trees
+library(vip)         # for feature importance
+library(pdp)         # for feature effects
+```
+
+
+Using the Boston housing data set from the pdp package, where the response feature is the median value of homes within a census tract (cmedv):
+
+
+How many internal splitting nodes optimize model performance?
+What are the predicted values and SEE in the terminal nodes?
+Identify the first feature split node and explain how it is splitting this feature.
+Which 10 features are considered most influential? Are these the same features that have been influential in previous models?
+Now perform 1-5 to the Attrition dataset, which is classification model rather than a regression model.
+```{r}
+
+```
+
+```{r }
+Boston  <- pdp::boston
+split <- initial_split(Boston, strata = "cmedv", prop = 0.7)
+train <- training(split)
+test  <- testing(split)
+```
+
+Apply a decision tree model with all features.
+
+```{r}
+Boston <- rpart(
+  formula = cmedv ~ .,
+  data    = train,
+  method  = "anova"
+)
+```
+
+```{r}
+Boston
+```
+
+```{r}
+rpart.plot(Boston)
+```
+
+```{r}
+plotcp(Boston)
+```
+
+```{r}
+Boston <- rpart(
+  formula = cmedv ~ .,
+  data    = train,
+  method  = "anova",
+    control = list(cp = 0, xval = 10)
+)
+
+plotcp(Boston)
+abline(v = 11, lty = "dashed")
+```
+
+```{r}
+Boston$cptable
+```
+
+```{r}
+Boston <- train(
+  cmedv ~ .,
+  data = train,
+  method = "rpart",
+  trControl = trainControl(method = "cv", number = 10),
+  tuneLength = 20
+)
+```
+
+```{r}
+ggplot(Boston)
+```
+
+```{r}
+vip(Boston, num_features = 45, geom = "point")
+```
+```{r}
+p1 <- partial(Boston, pred.var = "rm") %>% 
+  ggplot(aes(rm, yhat)) +
+  geom_line()
+
+p2 <- partial(Boston, pred.var = "lstat") %>% 
+  ggplot(aes(lstat, yhat)) +
+  geom_line()
+
+p3 <- partial(Boston, pred.var = c("rm", "lstat")) %>% 
+  plotPartial(levelplot = FALSE, zlab = "yhat", drape = TRUE, 
+              colorkey = TRUE, screen = list(z = -20, x = -60))
+
+# Display plots side by side
+gridExtra::grid.arrange(p1, p2, p3, ncol = 3)
+```
+
